@@ -1,0 +1,71 @@
+bot:
+  artifact_dir: bot_artifacts_K7V
+  data_dir: bot_data
+  bet_sol: 0.1
+  entry_threshold_override: null
+  status_interval_s: 30
+harness:
+  snap_every: 1
+  stale_sec: 300
+  fresh_rsol_lam: 3000000000
+exit:
+  policy: level_tp_50_stop30_cap120    # paired with k3v03_final cross-era tp200-ranking head (replay-selected, see bot_artifacts_k3v03_final/model_spec.json)
+  mode: static
+  total_slices: 8
+  derisk_slices: 4
+  derisk_min_gap_s: 5.0
+  runner_min_gap_s: 15.0
+  runner_retrace_frac: 0.3
+  runner_min_arm_ret: 0.2
+  death_threshold: 0.1
+  dynamic_window_fires: 30
+  dynamic_min_uplift_sol: 0.02
+  dynamic_cooldown_h: 6
+  dynamic_min_sample: 30
+  dynamic_candidates:
+  - k_combined
+  - h_time_spaced
+  - b_frontload
+  - c_hybrid_t30
+  - f_hybrid_t50
+  - rl_layered
+  rl_artifact_dir: bot_artifacts_K7V_rl_layered
+  rl_q5_threshold: 0.2
+broker:
+  tip_lamports: 100000
+  priority_fee_micro: 2000000   # CU price (data field p75); 0.0004 SOL/tx at 200k CU
+  cu_limit: 160000
+  slippage_bps: 1500            # legacy shared fallback; the split keys below win
+  # Split slippage (2026-06-11, exec_sim cap sweep): entry cap is a safety
+  # bound only (winner/loser slip distributions identical, p50 +0.85 max +1.34;
+  # 1500bps kept 6/157 fires, total net NEGATIVE; >=13400bps keeps all).
+  # 20000 = 3x-bet worst-case spend with ~50% headroom over the observed max.
+  slippage_bps_buy: 20000
+  slippage_bps_sell: 1500       # sells keep protection; retry ladder 3000/5000/8000 -> market
+  jito_dry_run: true
+  jito_endpoint: https://frankfurt.mainnet.block-engine.jito.wtf/api/v1
+  recon_poll_s: 2.0
+  recon_expire_s: 30.0
+  holdings_reconcile_s: 300.0
+  blockhash_poll_s: 0.2
+listener:
+  source: grpc
+  grpc_endpoint: grpc-fra1-1.erpc.global:80
+  grpc_insecure: true
+paper_book:
+  cost_bps: 250.0
+  fee_per_tx_sol: 0.0015
+  entry_lat_snaps: 1
+  max_slices: 8
+risk:
+  max_concurrent_positions: 16
+  max_fires_per_minute: 6
+  daily_loss_limit_sol: -1.0
+  bundle_failure_rate_limit: 0.5
+  bundle_failure_window: 20
+  circuit_breaker_cooldown_s: 600
+  # Late-entry skip (2026-06-12, catchable_edge.py on 157 fires): don't fire if
+  # decision virtual-SOL reserves >= this. vsK<55 SOL = +0.108/fire 68% win;
+  # vsK 55-80 = -0.322 12% win (late = no room before graduation, and live they
+  # graduate-revert before we land). 0 disables.
+  skip_fire_vsol_lam: 55000000000

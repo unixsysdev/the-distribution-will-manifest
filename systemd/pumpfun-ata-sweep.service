@@ -1,0 +1,8 @@
+[Unit]
+Description=pump.fun ATA rent sweep (close empty token accounts, reclaim rent)
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/the-distribution-will-manifest
+ExecStart=/root/the-distribution-will-manifest/venv/bin/python tools/ata_sweep.py

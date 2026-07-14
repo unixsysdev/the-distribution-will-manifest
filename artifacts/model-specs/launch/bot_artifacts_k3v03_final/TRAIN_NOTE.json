@@ -1,0 +1,29 @@
+{
+ "created_at_utc": "2026-06-09T22:36:00Z",
+ "train": "May coherent span (Apr29-May5) + June capture Jun7-8, live-matched honest population (min_fwd=0)",
+ "features": [
+  "win_ret",
+  "dir_eff",
+  "buy_frac",
+  "uniq",
+  "net_sol",
+  "tot_sol",
+  "single_actor_share",
+  "trades_per_sec",
+  "entry_sol",
+  "win_drawup",
+  "win_drawdown",
+  "win_ret_v",
+  "dir_eff_v",
+  "buy_frac_v",
+  "uniq_v",
+  "net_sol_v",
+  "tot_sol_v",
+  "single_actor_share_v",
+  "trades_per_sec_v",
+  "entry_sol_v",
+  "win_drawup_v",
+  "win_drawdown_v"
+ ],
+ "pending": "model_spec.json written at packaging time after economics replay"
+}

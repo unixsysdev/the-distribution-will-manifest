@@ -1,0 +1,20 @@
+[Unit]
+Description=pump.fun shred-stream Buy intent recorder (front-run signal feed)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/the-distribution-will-manifest
+ExecStart=/root/the-distribution-will-manifest/venv/bin/python -u shred_bot/intent_recorder.py
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pumpfun-shred-intents
+NoNewPrivileges=true
+ProtectSystem=full
+ReadWritePaths=/root/the-distribution-will-manifest/shred_bot/intent_capture
+
+[Install]
+WantedBy=multi-user.target

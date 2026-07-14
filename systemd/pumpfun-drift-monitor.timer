@@ -1,0 +1,11 @@
+[Unit]
+Description=Run pump.fun drift monitor daily
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=600
+Persistent=true
+Unit=pumpfun-drift-monitor.service
+
+[Install]
+WantedBy=timers.target

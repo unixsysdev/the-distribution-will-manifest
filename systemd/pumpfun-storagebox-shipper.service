@@ -1,0 +1,22 @@
+[Unit]
+Description=pump.fun storagebox shipper (compress + move local buffer to Hetzner mount)
+After=network-online.target mnt-storagebox.mount
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/the-distribution-will-manifest
+ExecStart=/root/the-distribution-will-manifest/venv/bin/python -u shred_bot/storagebox_shipper.py
+Restart=always
+RestartSec=10
+# Network/disk I/O bound; deprioritise CPU so it never starves the recorder.
+Nice=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pumpfun-storagebox-shipper
+NoNewPrivileges=true
+# The shipper needs to walk both the local buffer and the storagebox mount.
+ProtectSystem=false
+
+[Install]
+WantedBy=multi-user.target

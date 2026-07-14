@@ -1,0 +1,44 @@
+[project]
+name = "pumpbot"
+version = "0.1.0"
+description = "pump.fun paper-trading research bot: live-matched ML entry models, exit-policy book, Jito execution path, shred-intent front-run signals"
+requires-python = ">=3.12"
+dependencies = [
+    "grpcio>=1.62.0",
+    "grpcio-tools>=1.62.0",
+    "protobuf>=4.25.0",
+    "aiohttp>=3.9.0",
+    "python-dotenv>=1.0.0",
+    "solders>=0.21.0",
+    "solana>=0.34.0",
+    "jito-py-rpc",
+    "base58",
+    "scikit-learn==1.8.0",   # PINNED: model pickles are version-bound (model_spec.json sklearn_version)
+    "pandas>=2.2",
+    "pyyaml>=6.0",
+    "numpy>=1.26",
+]
+
+[tool.setuptools]
+packages = ["pumpbot", "exit_policies", "research", "research.continuation", "research.graduation"]
+
+[project.optional-dependencies]
+dash = ["textual>=0.50", "rich>=13.0"]
+dev = ["pytest>=8.0", "ruff>=0.4"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["venv", "grpc_stubs", "protos", "__pycache__", "archive", "shred_bot/stubs"]
+
+[tool.ruff.lint]
+# Start with correctness-class rules only; style classes phased in at stage 2
+# of MIGRATION (see docs/notes/ARCHITECTURE.md) to avoid a 5000-line cosmetic diff on a
+# running production tree.
+select = ["F", "E7", "E9", "B", "PLE"]
+ignore = ["E731", "E741"]

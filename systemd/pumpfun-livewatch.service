@@ -1,0 +1,17 @@
+[Unit]
+Description=pump.fun live-trade heartbeat monitor (READ-ONLY; status/P&L/recon every 2min)
+After=pumpfun-bot.service
+
+[Service]
+Type=simple
+WorkingDirectory=/root/the-distribution-will-manifest
+ExecStart=/root/the-distribution-will-manifest/venv/bin/python tools/livewatch.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pumpfun-livewatch
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

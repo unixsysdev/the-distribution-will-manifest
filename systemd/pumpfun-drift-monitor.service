@@ -1,0 +1,13 @@
+[Unit]
+Description=pump.fun drift monitor (daily KS test + winner-rate check)
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/the-distribution-will-manifest
+ExecStart=/root/the-distribution-will-manifest/venv/bin/python tools/drift_monitor.py --quiet
+# exit 0 = no drift, exit 2 = drift detected
+SuccessExitStatus=0 2
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pumpfun-drift

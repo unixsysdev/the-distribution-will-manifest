@@ -1,0 +1,18 @@
+[Unit]
+Description=pump.fun raw shred firehose (writes local buffer; shipper moves to storagebox)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/the-distribution-will-manifest
+ExecStart=/root/the-distribution-will-manifest/venv/bin/python -u shred_bot/raw_shred_firehose.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pumpfun-shred-firehose
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

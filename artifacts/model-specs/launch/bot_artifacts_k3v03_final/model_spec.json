@@ -1,0 +1,77 @@
+{
+  "sklearn_version": "1.8.0",
+  "artifact_kind": "k3v03_final_crossera_22f",
+  "created_at_utc": "2026-06-09T23:17:58Z",
+  "entry": {
+    "features": [
+      "win_ret",
+      "dir_eff",
+      "buy_frac",
+      "uniq",
+      "net_sol",
+      "tot_sol",
+      "single_actor_share",
+      "trades_per_sec",
+      "entry_sol",
+      "win_drawup",
+      "win_drawdown",
+      "win_ret_v",
+      "dir_eff_v",
+      "buy_frac_v",
+      "uniq_v",
+      "net_sol_v",
+      "tot_sol_v",
+      "single_actor_share_v",
+      "trades_per_sec_v",
+      "entry_sol_v",
+      "win_drawup_v",
+      "win_drawdown_v"
+    ],
+    "target": "peak_ret>=2.0 ranking head",
+    "fire_if": "predict_proba[:,1] >= entry_threshold",
+    "entry_threshold_top_decile": 0.5,
+    "threshold": 0.5,
+    "trigger": "K=3 AND V=0.3 joint",
+    "k": 3,
+    "v_sol": 0.3,
+    "rich_features": false
+  },
+  "exit_policy": "level_tp_50",
+  "recovery": {
+    "disabled": true,
+    "death_cut_threshold": -1.0,
+    "features": [],
+    "reason": "no recovery head trained at K=3 trigger yet; exits via level TP + stale watchdog (300s), matching the replay assumptions"
+  },
+  "training": {
+    "data": "live-matched honest population (min_fwd=0): May coherent span Apr29-May5 (70,669) + June capture Jun7-8 (~16k)",
+    "validation": {
+      "month_gap_eval1": "train May -> test ALL June: peak_ge_50 AUC 0.784 (buckets 5.5%->95.4%), peak_ge_200 AUC 0.782",
+      "final_eval2": "train May+Jun7-8 -> test Jun9: peak_ge_50 AUC 0.806, peak_ge_200 AUC 0.812"
+    }
+  },
+  "holdout_result": {
+    "kind": "exit-policy replay, Jun9 OOS bets, harness cost model (q=0.1, 250bps, 0.0015/tx, 300s)",
+    "head": "tp200_head",
+    "tp": 0.5,
+    "lat1_mean_net": 0.48770789637858103,
+    "lat1_win_rate": 0.95,
+    "lat1_p25": 0.4439876078130722,
+    "lat2_mean_net": 0.05601466511163995,
+    "p_gt0": 1.0,
+    "test_n": 40,
+    "test_fire_rate": 0.006141732767065572,
+    "val_n": 104,
+    "val_fire_rate": 0.0065223471920668194,
+    "expectation_note": "diagnostics, not promises; the honest test is live_bucket_diag at n>=50 fires"
+  },
+  "runtime_notes": {
+    "requires_env": {
+      "K_TRIGGER": 3,
+      "V_TRIGGER": 0.3
+    },
+    "config_yaml": {
+      "exit.policy": "level_tp_50"
+    }
+  }
+}

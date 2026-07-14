@@ -1,0 +1,12 @@
+[Unit]
+Description=pump.fun auto-policy selector (replays recent fires, swaps exit policy if better)
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/the-distribution-will-manifest
+ExecStart=/root/the-distribution-will-manifest/venv/bin/python tools/auto_policy.py 
+SuccessExitStatus=0
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pumpfun-auto-policy

@@ -1,0 +1,12 @@
+[Unit]
+Description=Run pump.fun auto-policy selector every 4 hours
+
+[Timer]
+OnBootSec=20min
+OnUnitActiveSec=4h
+RandomizedDelaySec=300
+Persistent=true
+Unit=pumpfun-auto-policy.service
+
+[Install]
+WantedBy=timers.target

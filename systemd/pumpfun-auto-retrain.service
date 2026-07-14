@@ -1,0 +1,15 @@
+[Unit]
+Description=pump.fun auto-retrain (re-extract from grpc_capture archive + retrain V+K7 + swap model if uplift)
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/the-distribution-will-manifest
+ExecStart=/root/the-distribution-will-manifest/venv/bin/python tools/auto_retrain.py --execute
+# Long-running: extract + train can take ~10-30 min on the capture archive
+TimeoutStartSec=2400
+SuccessExitStatus=0
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pumpfun-auto-retrain
+Nice=10

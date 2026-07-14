@@ -1,0 +1,14 @@
+[Unit]
+Description=pump.fun CONTINUATION bot LOSS WATCHDOG — independent root kill-switch. Stops pumpfun-continuation-bot at -1.0 SOL realized P&L or 1.5 SOL raw drawdown. Logs every tick to bot_data/cont_watchdog.jsonl.
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/the-distribution-will-manifest
+ExecStart=/root/the-distribution-will-manifest/venv/bin/python -m research.continuation.cont_loss_watchdog
+Restart=on-failure
+RestartSec=5
+SyslogIdentifier=pumpfun-cont-watchdog
+
+[Install]
+WantedBy=multi-user.target

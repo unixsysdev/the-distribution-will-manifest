@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# Secrets / wallet
+.env
+*.key
+
+# Live data + logs (regenerable / huge)
+grpc_capture/
+bot_data/
+broker_*.jsonl
+shadow_run*.jsonl
+shadow_*.out
+*.log
+
+# Model artifacts (binary, regenerable from training pipeline)
+*.pkl
+
+# Archived legacy files (kept on-disk for safety, not in version control)
+archive/
+
+# OS junk
+.DS_Store
+*.swp
+data/
+*.parquet
+buffer/
+raw_shred_entries/
+shred_bot/intent_capture/
+*.bin
+*.jsonl.gz
+
+# More binary / model artifact formats (code-only repo)
+*.pt
+*.pth
+*.onnx
+*.joblib
+*.npy
+*.npz
+*.safetensors
+*.h5
+*.ckpt
+*.pb
+*.model
+
+# env snapshots + local backups (never version control)
+.env.*
+!.env.example
+*.bak*

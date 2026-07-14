@@ -1,0 +1,20 @@
+[Unit]
+Description=pump.fun gRPC firehose (raw SubscribeUpdate archive — writes local, shipper moves to storagebox)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/the-distribution-will-manifest
+ExecStart=/root/the-distribution-will-manifest/venv/bin/python -u grpc_firehose.py
+Restart=always
+RestartSec=5
+# Like the shred firehose: keep it nice so it never starves the bot.
+Nice=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pumpfun-grpc-firehose
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

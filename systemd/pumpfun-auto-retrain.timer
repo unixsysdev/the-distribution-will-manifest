@@ -1,0 +1,13 @@
+[Unit]
+Description=Run pump.fun auto-retrain weekly (Sun 02:00 UTC)
+
+[Timer]
+# Weekly retrain cycle. The script gates internally on capture archive >= 3 days,
+# so the first ~3 firings will skip until enough data accumulates.
+OnCalendar=Sun *-*-* 02:00:00 UTC
+RandomizedDelaySec=1800
+Persistent=true
+Unit=pumpfun-auto-retrain.service
+
+[Install]
+WantedBy=timers.target

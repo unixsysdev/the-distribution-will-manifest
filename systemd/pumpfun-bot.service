@@ -1,0 +1,55 @@
+[Unit]
+Description=pump.fun V+K7 bot (PAPER mode by default; restart-recovering)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/the-distribution-will-manifest
+# PAPER mode by default. To go live you must BOTH:
+#   1) add `--live` to ExecStart, and
+#   2) set Environment=PUMPFUN_LIVE_OK=1 below.
+# Either one alone refuses to execute. This is intentional double-gating.
+ExecStart=/root/the-distribution-will-manifest/venv/bin/python -u pumpfun_bot.py \
+  --artifact-dir bot_artifacts_K7V \
+  --data-dir /root/the-distribution-will-manifest/bot_data \
+  --bet-sol 0.1 \
+  --live \
+  --source grpc \
+  --status-interval 30
+# ENTRY THRESHOLD (decision 2026-06-08, replay-backed):
+#   No --entry-threshold flag passed -> bot uses model_spec.json's
+#   entry_threshold_top_decile = 0.5108 (the model's natively-calibrated
+#   top-decile cut). The previous --entry-threshold 0.30 override was
+#   removed because the policy_replay_full backtest (n=10042 at 0.5108
+#   on May fresh + OOS + June capture) showed mean-per-bet ~4x higher at
+#   0.5108 vs 0.30 across every registered exit policy, with positive
+#   median (vs negative at 0.30).
+#
+# EXIT POLICY (decision 2026-06-08):
+#   cfg.exit.policy = level_tp_100 (configured in config.yaml).
+#   sell_all at ret >= +100%. Selected because in the same replay it
+#   matched c_hybrid_t30's mean (+39% vs +37%) with 9x higher median
+#   (+83% vs +9%) and the same win rate, at the same threshold.
+#
+# REVISIT WHEN:
+#   (a) lsm_continuation backtest result lands and beats level_tp_100, OR
+#   (b) latency stress test (entry_lat=2) materially changes ranking, OR
+#   (c) live operation accumulates >=100 fires at this config and the
+#       result diverges meaningfully from the replay.
+Restart=always
+RestartSec=5
+# Live gating env (commented out -> uncomment ONLY when authorized to trade):
+Environment=PUMPFUN_LIVE_OK=1
+Environment=JITO_DRY_RUN=1
+Environment=K_TRIGGER=3
+Environment=V_TRIGGER=0.3
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pumpfun-bot
+NoNewPrivileges=true
+ProtectSystem=full
+ReadWritePaths=/root/the-distribution-will-manifest/bot_data
+
+[Install]
+WantedBy=multi-user.target

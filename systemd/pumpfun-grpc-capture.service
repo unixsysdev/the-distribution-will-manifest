@@ -1,0 +1,30 @@
+[Unit]
+Description=pump.fun gRPC TradeEvent capture (training-data recorder, no model/wallet)
+After=network-online.target
+Wants=network-online.target
+# Independent of the bot — capture must keep running across bot restarts/deploys.
+
+[Service]
+Type=simple
+WorkingDirectory=/root/the-distribution-will-manifest
+ExecStart=/root/the-distribution-will-manifest/venv/bin/python -u grpc_capture.py \
+  --endpoint grpc-fra1-1.erpc.global:80 \
+  --insecure \
+  --data-dir /root/the-distribution-will-manifest/grpc_capture \
+  --rotate-secs 3600 \
+  --include-raw-b64 \
+  --print-stats-secs 60
+Restart=always
+RestartSec=5
+# capture is pure I/O; keep it nice so it never starves the bot
+Nice=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pumpfun-grpc-capture
+# basic hardening — no wallet, no execution, read-only except its own data dir
+NoNewPrivileges=true
+ProtectSystem=full
+ReadWritePaths=/root/the-distribution-will-manifest/grpc_capture
+
+[Install]
+WantedBy=multi-user.target
